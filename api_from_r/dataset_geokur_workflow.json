@@ -1,0 +1,89 @@
+{
+    "scheming_version": 2,
+    "dataset_type": "workflow",
+    "skip_resources": true,
+    "about": "CKAN workflow schema for GeoKur",
+    "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "Title",
+            "preset": "title"
+        },
+        {
+            "field_name": "name",
+            "label": "Identifier",
+            "preset": "name"
+        },
+        {
+            "field_name": "notes",
+            "label": "Description",
+            "help_text": "Describe the core characteristics.",
+            "preset": "notes"
+        },
+        {
+            "field_name": "documentation",
+            "label": "Documentation",
+            "help_text": "Reference a documentation resp. related publication.",
+            "preset": "single_link"
+        },
+        {
+            "field_name": "source_code",
+            "label": "Source code",
+            "help_text": "Reference the related source code, e.g. link to GitHub or Zenodo folder.",
+            "preset": "single_link"
+        },
+        {
+            "field_name": "rel_datasets",
+            "label": "Related datasets",
+            "help_text": "Please specify related datasets.",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
+        },
+        {
+            "field_name": "result",
+            "label": "Result",
+            "help_text": "Please specify output datasets.",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
+        },
+        {
+            "field_name": "rel_processes",
+            "label": "Related processes",
+            "help_text": "Please select all processes that are included in the worklow.",
+            "preset": "select_dataset_by_type",
+            "required_type": "process",
+            "multiple_items": true,
+            "allow_external_items": false
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Organization",
+            "preset": "owner_org"
+        }
+    ],
+    "resource_fields": [
+        {
+            "field_name": "url",
+            "label": "URL",
+            "preset": "resource_url",
+            "form_placeholder": "http://example.com/my-data.csv"
+        },
+        {
+            "field_name": "name",
+            "label": "Name",
+            "validators": "if_empty_same_as(url) unicode",
+            "form_placeholder": "leave blank to use resource file name"
+        },
+        {
+            "field_name": "format",
+            "label": "Format",
+            "preset": "resource_format",
+            "form_placeholder": "eg. CSV, XML or JSON"
+        }
+    ]
+}

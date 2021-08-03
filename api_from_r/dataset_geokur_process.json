@@ -1,0 +1,129 @@
+{
+    "scheming_version": 2,
+    "dataset_type": "process",
+    "skip_resources": true,
+    "about": "CKAN process schema for GeoKur",
+    "about_url": "https://github.com/GeoinformationSystems/ckanext-scheming",
+    "related_fields": [
+        {
+            "type": "workflow",
+            "relation_field": "rel_processes",
+            "relation_name": "Related workflows"
+        }
+    ],
+    "dataset_fields": [
+        {
+            "field_name": "title",
+            "label": "Title",
+            "preset": "title"
+        },
+        {
+            "field_name": "name",
+            "label": "Identifier",
+            "preset": "name"
+        },
+        {
+            "field_name": "notes",
+            "label": "Description",
+            "help_text": "Describe the core characteristics.",
+            "preset": "notes"
+        },
+        {
+            "field_name": "documentation",
+            "label": "Documentation",
+            "help_text": "Reference a documentation resp. related publication.",
+            "preset": "single_link"
+        },
+        {
+            "field_name": "used",
+            "label": "Used",
+            "help_text": "Please specify input datasets.",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
+        },
+        {
+            "field_name": "generated",
+            "label": "Generated",
+            "help_text": "Please specify output datasets.",
+            "preset": "select_dataset_by_type",
+            "required_type": "dataset",
+            "multiple_items": true,
+            "allow_external_items": true
+        },
+        {
+            "field_name": "category",
+            "label": "Category",
+            "help_text": "Please categorize the process",
+            "preset": "multiple_checkbox",
+            "choices": [
+                {
+                    "value": "geokur:Selection",
+                    "label": "geokur:Selection"
+                },
+                {
+                    "value": "geokur:Transformation",
+                    "label": "geokur:Transformation"
+                },
+                {
+                    "value": "geokur:Reclassification",
+                    "label": "geokur:Reclassification"
+                },
+                {
+                    "value": "geokur:Geometric",
+                    "label": "geokur:Geometric"
+                },
+                {
+                    "value": "geokur:Visualization",
+                    "label": "geokur:Visualization"
+                },
+                {
+                    "value": "geokur:Neighborhood",
+                    "label": "geokur:Neighborhood"
+                },
+                {
+                    "value": "geokur:Overlay",
+                    "label": "geokur:Overlay"
+                },
+                {
+                    "value": "geokur:Network",
+                    "label": "geokur:Network"
+                },
+                {
+                    "value": "geokur:Statistics",
+                    "label": "geokur:Statistics"
+                },
+                {
+                    "value": "geokur:Module",
+                    "label": "geokur:Module"
+                }
+            ]
+        },
+        {
+            "field_name": "owner_org",
+            "label": "Organization",
+            "preset": "owner_org"
+        }
+    ],
+    "resource_fields": [
+        {
+            "field_name": "url",
+            "label": "URL",
+            "preset": "resource_url",
+            "form_placeholder": "http://example.com/my-data.csv"
+        },
+        {
+            "field_name": "name",
+            "label": "Name",
+            "validators": "if_empty_same_as(url) unicode",
+            "form_placeholder": "leave blank to use resource file name"
+        },
+        {
+            "field_name": "format",
+            "label": "Format",
+            "preset": "resource_format",
+            "form_placeholder": "eg. CSV, XML or JSON"
+        }
+    ]
+}
