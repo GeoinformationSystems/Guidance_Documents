@@ -3,17 +3,17 @@ official guide: https://docs.ckan.org/en/2.9/api/
 
 ## Setup
 
-Via CKAN frontend, go to your personal page, generate an API-key, and save it at a secure location.
+Via CKAN frontend: go to your personal page, generate an API-key, and save it locally.
 
 ## Access via Python
 
-Use Python 3 scripts to to automate tasks that require API requests.
+Use Python 3 scripts to automate tasks that require API requests.
 
 ### GET Requests
 
 _No API key required_
 
-This example shows all public datasets in the catalog. PPrint produces more readable output.
+This example shows how to request all public datasets of the catalog. Using the pprint function creates a detailed output.
 ```python
 # get dataset names
 
