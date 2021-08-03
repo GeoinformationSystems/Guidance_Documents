@@ -1,0 +1,1 @@
+This repository serves as collection place for informal guidance documents.
