@@ -1,5 +1,4 @@
 dataset_geokur_live.json
 dataset_geokur_process.json
 dataset_geokur_workflow.json
-exProvWithCkan.R
 makeSchemaTable.py
