@@ -1,6 +1,6 @@
 # Schema Reference
 
-The following tables serve as reference to find the IDs that are used to access the metadata fields from the API. Expected Input describes in which form the the according field expects the input to be. Expected datatypes that are marked as _complex_ require stringified JSON, to infer the correct structure please review the JSON representation of an existing dataset (e.g.: https://geokur-dmp.geo.tu-dresden.de/dataset/potyield) or create an according test dataset.
+The following tables serve as reference to find the IDs that are used to access the metadata fields from the API. Expected Input describes in which form the according field expects the input to be. Expected datatypes that are marked as _complex_ require stringified JSON, to infer the correct structure please review the JSON representation of an existing dataset (e.g.: https://geokur-dmp.geo.tu-dresden.de/dataset/potyield) or create an according test dataset.
 
 ## Dataset Scheme
 
