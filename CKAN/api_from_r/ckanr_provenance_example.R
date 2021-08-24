@@ -11,6 +11,8 @@ library("rgdal")
 
 # Configure CKAN connection
 ckanr_setup("https://geokur-dmp.geo.tu-dresden.de/", key = "***")
+organization = "..."
+author = "..."
 
 # Set some useful variables for later
 dataset_base_url <- "https://geokur-dmp.geo.tu-dresden.de/dataset/"
@@ -71,8 +73,8 @@ pollination_reprojected_metadata <- package_create(
     name = "dataset_pollination_reprojected",
     title = "Dataset Pollination Reprojected",
     conforms_to = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     was_derived_from = paste0(
       dataset_base_url, pollination_metadata$id
     )
@@ -89,8 +91,8 @@ pollination_resampled_metadata <- package_create(
     name = "dataset_pollination_resampled",
     title = "Dataset Pollination Resampled",
     conforms_to = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     was_derived_from = paste(
       paste0(dataset_base_url, pollination_reprojected_metadata$id),
       paste0(dataset_base_url, yield_rapeseed_metadata$id),
@@ -106,8 +108,8 @@ reproject_metadata <- package_create(
     type = "process",
     name = "reproject_pollination",
     title = "Reproject Pollination",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     used = paste0(dataset_base_url, pollination_metadata$id),
     generated = paste0(dataset_base_url, pollination_reprojected_metadata$id),
     category = "geokur:Transformation"
@@ -120,8 +122,8 @@ resample_metadata <- package_create(
     type = "process",
     name = "resample_pollination",
     title = "Resample Pollination",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     used = paste(
       paste0(dataset_base_url, yield_rapeseed_metadata$id),
       paste0(dataset_base_url, pollination_reprojected_metadata$id),
@@ -146,7 +148,7 @@ final_dataset_metadata <- package_create(
     title = "Rapeseed Yield and Pollination",
     conforms_to = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
     notes = "Combined rapeseed yield and pollination as CSV",
-    owner_org = "...",
+    owner_org = organization,
     contact_name = "..."
   )
 )
@@ -157,8 +159,8 @@ cbind_metadata <- package_create(
     name = "combine_rapeseed_and_pollination",
     title = "Combine Rapeseed And Pollination",
     notes = "Bind rapeseed yield and pollination rasters to common table and remove rapeseed values equal to zero and pollination values that are not defined.",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     used = paste(
       paste0(dataset_base_url, yield_rapeseed_metadata$id),
       paste0(dataset_base_url, pollination_resampled_metadata$id),
@@ -177,8 +179,8 @@ workflow_metadata <- package_create(
     name = "combine_rasters",
     title = "Combine Rasters",
     notes = "Combine rasters with different projections and resolutions in a common table",
-    owner_org = "...",
-    contact_name = "...",
+    owner_org = organization,
+    contact_name = author,
     rel_datasets = paste(
       paste0(dataset_base_url, yield_rapeseed_metadata$id),
       paste0(dataset_base_url, pollination_metadata$id),
@@ -223,10 +225,10 @@ resource_metadata <- resource_create(
 # ----------------------------------------------------------------------------
 
 # destroy everything that was built
-package_delete(pollination_reprojected_metadata$id)
-package_delete(pollination_resampled_metadata$id)
-package_delete(final_dataset_metadata$id)
-package_delete(reproject_metadata$id)
-package_delete(resample_metadata$id)
-package_delete(cbind_metadata$id)
-package_delete(workflow_metadata$id)
+# package_delete(pollination_reprojected_metadata$id)
+# package_delete(pollination_resampled_metadata$id)
+# package_delete(final_dataset_metadata$id)
+# package_delete(reproject_metadata$id)
+# package_delete(resample_metadata$id)
+# package_delete(cbind_metadata$id)
+# package_delete(workflow_metadata$id)
