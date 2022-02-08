@@ -306,10 +306,11 @@ final_dataset_metadata <- package_show('rapeseed_yield_and_pollination')
 write.csv(output_table_final, "result.csv")
 
 # upload resource
-resource_metadata <- resource_create(package_id = final_dataset_metadata$id,
-                        name = "rapeseed_and_poll_resource",
-                        upload = "./result.csv",
-                        rcurl = "https://geokur-dmp.geo.tu-dresden.de/dataset"
+resource_metadata <- resource_create(
+  package_id = final_dataset_metadata$id,
+  name = "rapeseed_and_poll_resource",
+  upload = "./result.csv",
+  rcurl = "https://geokur-dmp.geo.tu-dresden.de/dataset"
  )
 
 ```
