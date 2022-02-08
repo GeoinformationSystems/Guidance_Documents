@@ -20,11 +20,6 @@ if (!require("rgdal")) install.packages("rgdal");library ("rgdal")
 
 # Configure CKAN connection
 ckanr_setup("https://geokur-dmp.geo.tu-dresden.de/", key = "***")
-
-# Set some useful variables for later
-dataset_base_url <- "https://geokur-dmp.geo.tu-dresden.de/dataset/"
-process_base_url <- "https://geokur-dmp.geo.tu-dresden.de/process/"
-workflow_base_url <- "https://geokur-dmp.geo.tu-dresden.de/workflow/"
 ```
 
 ### Browse CKAN
@@ -91,7 +86,7 @@ At the bottom of this document you find reference tables for all metadata fields
 
 __Proveance information is traced by filling the `was_derived_from` field.__
 
-The `was_derived_from` field expects a string with either a comma separated list of links or a single link. To construct the link of the input dataset, we concatenate the CKAN base URL for datasets with the input datasets id.
+The `was_derived_from` field expects a string with either a comma separated list of links or a single link. The URI of each metadataset is stored in its `uri` field (e.g. `pollination_metadata$uri`).
 
 ```R
 # create new Metadata DS in CKAN and store it in an R object (dataset_pollination_proj).
@@ -106,9 +101,7 @@ pollination_reprojected_metadata <- package_create(
     conforms_to = "http://www.opengis.net/def/crs/OGC/1.3/CRS84",
     owner_org = "...",
     contact_name = "...",
-    was_derived_from = paste0(
-      dataset_base_url, pollination_metadata$id
-    )
+    was_derived_from = pollination_metadata$uri
   )
 )
 ```
@@ -117,8 +110,8 @@ If a dataset is derived by multiple other datasets, correct concatenation is ach
 
 ```R
 was_derived_from = paste(
-  paste0(dataset_base_url, metadata1$id), 
-  paste0(dataset_base_url, metadata2$id), 
+  metadata1$uri, 
+  metadata2$uri, 
   sep=","
 )
 ```
@@ -141,8 +134,8 @@ pollination_resampled_metadata <- package_create(
     owner_org = "...",
     contact_name = "...",
     was_derived_from = paste(
-      paste0(dataset_base_url, pollination_reprojected_metadata$id), 
-      paste0(dataset_base_url, yield_rapeseed_metadata$id), 
+      pollination_reprojected_metadata$uri, 
+      yield_rapeseed_metadata$uri, 
       sep=","
     )
   )
@@ -174,8 +167,8 @@ reproject_metadata <- package_create(
     title = "Reproject Pollination",
     owner_org = "...",
     contact_name = "...",
-    used = paste0(dataset_base_url, pollination_metadata$id),
-    generated = paste0(dataset_base_url, pollination_reprojected_metadata$id),
+    used = pollination_metadata$uri,
+    generated = pollination_reprojected_metadata$uri,
     category = "geokur:Transformation"
   )
 )
@@ -189,10 +182,10 @@ resample_metadata <- package_create(
     owner_org = "...",
     contact_name = "...",
     used = paste(
-      paste0(dataset_base_url, yield_rapeseed_metadata$id),
-      paste0(dataset_base_url, pollination_reprojected_metadata$id),
+      yield_rapeseed_metadata$uri,
+      pollination_reprojected_metadata$uri,
       sep=","),
-    generated = paste0(dataset_base_url, pollination_resampled_metadata$id),
+    generated = pollination_resampled_metadata$uri),
     category = "geokur:Transformation"
   )
 )
@@ -231,10 +224,10 @@ cbind_metadata <- package_create(
     owner_org = "...",
     contact_name = "...",
     used = paste(
-      paste0(dataset_base_url, yield_rapeseed_metadata$id),
-      paste0(dataset_base_url, pollination_resampled_metadata$id),
+      yield_rapeseed_metadata$uri,
+      pollination_resampled_metadata$uri),
       sep=","),
-    generated = paste0(dataset_base_url, final_dataset_metadata$id),
+    generated = final_dataset_metadata$uri,
     category = "geokur:Selection"
   )
 )
@@ -259,17 +252,17 @@ workflow_metadata <- package_create(
     owner_org = "...",
     contact_name = "...",
     rel_datasets = paste(
-      paste0(dataset_base_url, yield_rapeseed_metadata$id),
-      paste0(dataset_base_url, pollination_metadata$id),
-      paste0(dataset_base_url, pollination_resampled_metadata$id),
-      paste0(dataset_base_url, pollination_reprojected_metadata$id),
+      yield_rapeseed_metadata$uri,
+      pollination_metadata$uri,
+      pollination_resampled_metadata$uri),
+      pollination_reprojected_metadata$uri,
       sep=","),
     rel_processes = paste(
-      paste0(process_base_url, reproject_metadata$id),
-      paste0(process_base_url, resample_metadata$id),
-      paste0(process_base_url, cbind_metadata$id),
+      reproject_metadata$uri,
+      resample_metadata$uri,
+      cbind_metadata$uri,
       sep=","),
-    result = paste0(dataset_base_url, final_dataset_metadata$id)
+    result = final_dataset_metadata$uri
   )
 )
 ```
@@ -336,7 +329,7 @@ cbind_metadata <- package_show("combine_rapeseed_and_pollination")
 workflow_metadata <- package_show("combine_rasters")
 
 
-# destroy everything that was built
+# remove all created DS
 package_delete(pollination_reprojected_metadata$id)
 package_delete(pollination_resampled_metadata$id)
 package_delete(final_dataset_metadata$id)
@@ -370,6 +363,7 @@ table th:nth-of-type(4) {
 |:--------- |:---------| :----------|:--------|
 |title|Title|String||
 |name|Identifier|String||
+|uri|This dataset's URI|String||
 |notes|Description|String||
 |documentation|Documentation|String containing a valid URL|eg. link to publication|
 |contact_name|Contact Point|String||
@@ -398,6 +392,7 @@ table th:nth-of-type(4) {
 |:--------- |:---------| :----------|:--------|
 |title|Title|String||
 |name|Identifier|String||
+|uri|This process' URI|String||
 |notes|Description|String|Describe the core characteristics.|
 |documentation|Documentation|String containing a valid URL|Reference a documentation resp. related publication.|
 |used|Used|String containing one or more valid URLs that are comma separated. The URLs should point to a dataset|Please specify input datasets.|
@@ -411,6 +406,7 @@ table th:nth-of-type(4) {
 |:--------- |:---------| :----------|:--------|
 |title|Title|String||
 |name|Identifier|String||
+|uri|This workflow's URI|String||
 |notes|Description|String|Describe the core characteristics.|
 |documentation|Documentation|String containing a valid URL|Reference a documentation resp. related publication.|
 |source_code|Source code|String containing a valid URL|Reference the related source code, e.g. link to GitHub or Zenodo folder.|
