@@ -6,7 +6,7 @@ By updating or creating metadatasets at script execution, provenance information
 
 For showcasing this tracing system, we download a raster dataset and its metadata from the GeoKur CKAN, reproject the raster and upload its (provenance) metadata to the GeoKur CKAN. We then resample the reprojected raster and also upload the new metadataset to CKAN. Finally, we combine the raster with an other raster in a common table.
 
-Before downloading the input data, we get used to `ckanr`s methods and browse the GeoKur CKAN. General information on CKAN API (e.g. How to get an API-Token?), can be found in the official API Documentation [https://docs.ckan.org/en/2.9/api/]. The full `ckanr` documentation is available at https://cran.r-project.org/web/packages/ckanr/ckanr.pdf.
+Before downloading the input data, we get used to `ckanr`s methods and browse the GeoKur CKAN. General information on CKAN API (e.g. How to get an API-Token?), can be found in the official API Documentation [https://docs.ckan.org/en/2.9/api/]. The full `ckanr` documentation is available at <https://cran.r-project.org/web/packages/ckanr/ckanr.pdf>.
 
 The document is wrapped up with some further examples for updating and deleting metadata as well as uploading the actual data. Furthermore, at the bottom of the document you find a reference of the metadata fields that are used in the GeoKur CKAN.
 
@@ -87,7 +87,7 @@ The GeoKur CKAN has 3 mandatory metadata fields `name`, `owner_org`, `contact_na
 
 Besides this mandatory fields, we happen to know the new CRS of the dataset and enter it in the according field (`conforms_to`). We furthermore want to give the dataset a `title`, which is the displayed name of the dataset. Lastly we fill a metadata filed called `type`; this field specifies the metadata scheme that is used. In GeoKur, we differentiate between dataset-metadata, process-metadata and workflow-metadata. The `type` field defaults to `"dataset"`, so we wouldn't really need to fill it in this case.
 
-At the bottom of this document you find reference tables for all metadata fields and their IDs. The full GeoKur Metadata Scheme can be reviewed at https://zenodo.org/record/4916698.
+At the bottom of this document you find reference tables for all metadata fields and their IDs. The full GeoKur Metadata Scheme can be reviewed at <https://zenodo.org/record/4916698>.
 
 __Proveance information is traced by filling the `was_derived_from` field.__
 
@@ -163,7 +163,7 @@ We use the GeoKur process metadata scheme to define the processes that are curre
 
 ### Reproject and Resample
 
-The inputs of a process are defined by filling the `used` field, the outputs by filling the `generated` field. Both fields are similar to `was_derived_from` in terms of syntactical requirements. Furthermore, for each process, one or more process categories can be defined. For the definitions see https://geokur-dmp.geo.tu-dresden.de/category-register (not online yet). __Use `type = "process"` to appliy the process metadata scheme.__
+The inputs of a process are defined by filling the `used` field, the outputs by filling the `generated` field. Both fields are similar to `was_derived_from` in terms of syntactical requirements. Furthermore, for each process, one or more process categories can be defined. For the definitions see <https://geokur-dmp.geo.tu-dresden.de/category-register> (not online yet). __Use `type = "process"` to appliy the process metadata scheme.__
 
 ```R
 
@@ -197,6 +197,7 @@ resample_metadata <- package_create(
   )
 )
 ```
+
 <img src="prov_02.PNG">
 
 ### A final process
@@ -275,28 +276,27 @@ workflow_metadata <- package_create(
 
 ## Updating and Deleting Metadata/ Upload Data
 
-
-
 ### Update Metadata
 
 We forgot to add the CRS to the metadata of the resampled pollination metadata and now want to rectify this blunder.
 
-There are two ways of updating metadatasets with the CKAN API, `package_patch` and `package_update`. `package_patch` only updates the specified fields and leaves all filled fields as they are. `package_update` otherwise, deletes all content from the dataset and then fills in the specified fields.
+There are two ways of updating metadatasets with the CKAN API, `package_patch` and `package_update`. `package_patch` only updates the specified fields and leaves all other fields as they are. `package_update` otherwise, deletes all content from the dataset and then fills in the specified fields.
 
-`package_patch` in `ckanr` is currently not working. Therefore, we use `package_update` and have to pass all existing metadata plus the new fields to the method:
+Below you find an example for `package_patch`.
 
 ```R
 # get current resample metadataset (if not in current R environment already; e.g. from package_create)
 pollination_resampled_metadata <- package_show('dataset_pollination_resampled')
 
 # add crs entry to list
-pollination_resampled_metadata$conforms_to = "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+pollination_resampled_metadata$conforms_to <- "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
 
-# remove some CKAN default fields that are not in our scheme and cause errors
-pollination_resampled_metadata[which(names(pollination_resampled_metadata)%in%c("author_email", "maintainer_email"))] <- NULL
+# remove some CKAN default fields that are causing trouble
+pollination_resampled_metadata[which(names(pollination_resampled_metadata) %in% c("relationships_as_object", "relationships_as_subject", "resources", "tags", "groups", "organization"))] <- NULL
 
-# pass all metadata as list(->unclass) to package_update()
-package_update(unclass(pollination_resampled_metadata), pollination_resampled_metadata$id)
+# pass to package patch
+package_patch(pollination_metadata)
+
 ```
 
 ### Upload Data
@@ -348,7 +348,7 @@ package_delete(workflow_metadata$id)
 
 ## Schema Reference
 
-The following tables serve as reference to find the IDs that are used to access the metadata fields from the API. Expected Input describes in which form the according field expects the input to be. Expected datatypes that are marked as _complex_ require stringified JSON, to infer the correct structure please review the JSON representation of an existing dataset (e.g.: https://geokur-dmp.geo.tu-dresden.de/dataset/potyield) or create an according test dataset.
+The following tables serve as reference to find the IDs that are used to access the metadata fields from the API. Expected Input describes in which form the according field expects the input to be. Expected datatypes that are marked as _complex_ require stringified JSON, to infer the correct structure please review the JSON representation of an existing dataset (e.g.: <https://geokur-dmp.geo.tu-dresden.de/dataset/potyield>) or create an according test dataset.
 
 ### Dataset Scheme
 
@@ -374,12 +374,12 @@ table th:nth-of-type(4) {
 |documentation|Documentation|String containing a valid URL|eg. link to publication|
 |contact_name|Contact Point|String||
 |contact_uri|Contact Point - ORCID|String containing a valid URL|According ORCID as link, leave blank otherwise|
-|alternate_identifier|Dataset DOI|String containing a valid URL|e.g. https://doi.org/10.7283/T5MW2F2D|
+|alternate_identifier|Dataset DOI|String containing a valid URL|e.g. <https://doi.org/10.7283/T5MW2F2D>|
 |url|Information Website|String containing a valid URL|links to project website or dataset's page|
 |tag_string|Keywords|_complex_||
-|theme|Theme / Category|String containing one or more valid URLs that are comma separated.|Provide links to descriptions of the themes; separate by comma. E.g.: http://inspire.ec.europa.eu/theme/ad, http://inspire.ec.europa.eu/theme/au.|
+|theme|Theme / Category|String containing one or more valid URLs that are comma separated.|Provide links to descriptions of the themes; separate by comma. E.g.: <http://inspire.ec.europa.eu/theme/ad>, <http://inspire.ec.europa.eu/theme/au>.|
 |spatial|Spatial Coverage|_complex_|Draw and edit the dataset extent as rectangles on the map, or paste a GeoJSON Polygon or Multipolygon geometry below, or create a bounding box from coordinates|
-|conforms_to|Coordinate Reference System|String containing a valid URL|Provide link to OGC definition of the CRS, http://docs.opengeospatial.org/DRAFTS/18-058.html#_crs_identifier_list, e.g. http://www.opengis.net/def/crs/EPSG/0/4326|
+|conforms_to|Coordinate Reference System|String containing a valid URL|Provide link to OGC definition of the CRS, <http://docs.opengeospatial.org/DRAFTS/18-058.html#_crs_identifier_list>, e.g. <http://www.opengis.net/def/crs/EPSG/0/4326>|
 |spatial_resolution|Spatial Resolution|Value as String|Spatial Resolution (the unit is determined by the resolution type)|
 |spatial_resolution_type|Spatial Resolution Measured|String; one of _"angular"_, _"scale"_ or _"meters"_|In meters: This property refers to the minimum spatial separation resolvable in a Dataset, measured in metres. As angular scale: Spatial resolution expressed as equivalent scale [ISO-19115], [ISO-19115-1], by using a representative fraction (e.g., 1:1,000, 1:1,000,000). As angular distance: Spatial resolution expressed as angular distance [ISO-19115-1], by using a decimal degree. As vertical distance: Spatial resolution expressed as vertical distance [ISO-19115-1].|
 |temporal_start|Temporal Coverage Start|String; date formatted as "YYYY-MM-DD"||
@@ -387,10 +387,10 @@ table th:nth-of-type(4) {
 |temporal_resolution|Temporal Resolution|String|E.g. 'P2Y3M20D' describes a period 2 years, 3 months and 20 days or 'P1D' describes a period of 1 day|
 |quality_metrics|Data Quality Metric|_complex_|Value of quality metric: Measured Value of the selected quality metric \| Ground Truth Dataset: Link to ground truth dataset \| Confidence term: Label of the confidence value of the selected quality metric, e.g. r value \| Confidence value: According confidence threshold \| Thematic representativity: Describes thematic aspects for which quality information is given \| Spatial representativity: Describes region for which quality information is given \| Temporal representativity: Describes time step or range for which quality information is given \| Name of quality source: Name of the source of information of the selected quality metric \| Type of quality source: Describes the origin of the quality information: data, report, scientific publication, Web site, other \| Link to quality source: Web link to access the quality information source|
 |is_version_of|Is Version of|String containing one or more valid URLs that are comma separated. The URLs should point to a dataset|A related resource of which the described resource is a version, edition, or adaptation. Changes in version imply substantive changes in content rather than differences in format.|
-|is_part_of|Is Part of|String containing one or more valid URLs that are comma separated. The URLs should point to a dataset|A related resource in which the described resource is physically or logically included (https://dublincore.org/specifications/dublin-core/dcmi-terms/#isPartOf).|
+|is_part_of|Is Part of|String containing one or more valid URLs that are comma separated. The URLs should point to a dataset|A related resource in which the described resource is physically or logically included (<https://dublincore.org/specifications/dublin-core/dcmi-terms/#isPartOf>).|
 |was_derived_from|Was derived from|String containing one or more valid URLs that are comma separated. The URLs should point to a dataset|Please specify datasets.|
 |owner_org|Organization|String; has to match an existing organizations ID in the CKAN instance||
-|license_id|Dataset License|String|Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at http://creativecommons.org/licenses/.|
+|license_id|Dataset License|String|Recommended best practice is to identify the license using a URI. Examples of such licenses can be found at <http://creativecommons.org/licenses/>.|
 
 ### Process Scheme
 
