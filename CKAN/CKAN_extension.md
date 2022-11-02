@@ -85,7 +85,7 @@ nano /etc/ckan/default/ckan.ini
 ```
 # ckan.ini
 ...
-ckan.plugins = plugin_1 plugin_2 ... plugi_n traffic_light
+ckan.plugins = plugin_1 plugin_2 ... plugin_n traffic_light
 ...
 ```
 
